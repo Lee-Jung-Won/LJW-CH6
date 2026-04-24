@@ -19,6 +19,10 @@ public:
 	FVector StartLocation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Moving")
 	float MoveSpeed;
+	float RealMoveSpeed;
+	float PlusMoveDist;
+	bool OnOff;
+	int8 PlusMinusDirect;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Moving")
 	float MaxRange;
 

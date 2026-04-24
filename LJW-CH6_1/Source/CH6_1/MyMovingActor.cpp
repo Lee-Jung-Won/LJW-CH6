@@ -3,20 +3,15 @@
 AMyMovingActor::AMyMovingActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
+	PlusMinusDirect = 1.f;
+	MoveSpeed = 1.f;
+	PlusMoveDist = 0.f;
+	OnOff = true;
 }
 
 void AMyMovingActor::SetGoActor()
 {
-	float DeltaTime = GetWorld()->DeltaTimeSeconds;
-
-	if (GetActorLocation().Y >= (StartLocation.Y + MaxRange) ||
-		GetActorLocation().Y <= (StartLocation.Y - MaxRange))
-	{
-		MoveSpeed = -MoveSpeed;
-	}
-
-	AddActorLocalOffset(FVector(0.0f, MoveSpeed * DeltaTime, 0.0f));
+	(OnOff) ? OnOff = false : OnOff = true;
 }
 
 void AMyMovingActor::BeginPlay()
@@ -27,7 +22,7 @@ void AMyMovingActor::BeginPlay()
 		Timer,
 		this,
 		&AMyMovingActor::SetGoActor,
-		0.01f,
+		3.0f,
 		true,
 		2.0f
 	);
@@ -37,6 +32,18 @@ void AMyMovingActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (OnOff)
+	{
+		float DeltaMove = MoveSpeed * DeltaTime;
+		PlusMoveDist += DeltaMove;
 
+		if (PlusMoveDist >= MaxRange)
+		{
+			PlusMinusDirect *= -1;
+			PlusMoveDist = 0.0f;
+		}
+
+		AddActorLocalOffset(FVector(0.0f, OnOff * PlusMinusDirect * DeltaMove, 0.0f));
+	}
 }
 
